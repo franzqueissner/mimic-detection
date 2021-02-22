@@ -1,6 +1,6 @@
 import math
 from getKeypoints import Keypoint
-from classes import Mouth, Eye
+from classes import Mouth, Eye, Eyebrow
 
 # helper functions
 def get_line_length(start_x, start_y, end_x, end_y):
@@ -35,8 +35,11 @@ def getMouth(keypoints_mouth):
     # relation
     mouth_relation = mouth_width/mouth_height
 
+    # more interesting points
+    mouth_between_lip_corners = getPointBetween(mouth_left, mouth_right)
+
     # mouth object
-    mouth_object = Mouth(mouth_left, mouth_right, mouth_top, mouth_bot, mouth_width, mouth_height, mouth_relation)
+    mouth_object = Mouth(mouth_left, mouth_right, mouth_top, mouth_bot, mouth_width, mouth_height, mouth_relation, mouth_between_lip_corners)
 
     # log:
     # print(f"Mouth width:{mouth_width:.2f}")
@@ -63,13 +66,28 @@ def getEyes(keypoints_eyes):
     righteye_bot = getPointBetween(keypoints_eyes[10], keypoints_eyes[11])
     righteye_height = get_line_length(righteye_top.x, righteye_top.y, righteye_bot.x, righteye_bot.y)
 
-    # eye objects
-    lefteye_object = Eye(lefteye_left, lefteye_right, lefteye_top, lefteye_bot, lefteye_width, lefteye_height)
-    righteye_object = Eye(righteye_left, righteye_right, righteye_top, righteye_bot, righteye_width, righteye_height)
+    # relations
+    lefteye_relation = lefteye_width/lefteye_height
+    righteye_relation = righteye_width/righteye_height
 
+    # eye objects
+    lefteye_object = Eye(lefteye_left, lefteye_right, lefteye_top, lefteye_bot, lefteye_width, lefteye_height, lefteye_relation)
+    righteye_object = Eye(righteye_left, righteye_right, righteye_top, righteye_bot, righteye_width, righteye_height, lefteye_relation)
+ 
     # log:
     # print(f"Left eye width: {lefteye_width:.2f}")
     # print(f"Right eye width: {righteye_width:.2f}")
     # print(f"Left eye height: {lefteye_height:.2f}")
     # print(f"Right eye height: {righteye_height:.2f}")
     return lefteye_object, righteye_object
+
+def getEyebrows(keypoints_eyebrows):
+  leftbrow_left = keypoints_eyebrows[0]
+  leftbrow_right = keypoints_eyebrows[4]
+  rightbrow_left = keypoints_eyebrows[5]
+  rightbrow_right = keypoints_eyebrows[9]
+
+  leftbrow_object = Eyebrow(leftbrow_left, leftbrow_right)
+  rightbrow_object = Eyebrow(rightbrow_left, rightbrow_right)
+
+  return leftbrow_object, rightbrow_object

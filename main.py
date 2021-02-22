@@ -28,29 +28,36 @@ while frames_count < MAX_FRAMES:
             # get face parts
             mouth = getMouth(keypoints_mouth)
             left_eye, right_eye = getEyes(keypoints_eyes)
+            left_eyebrow, right_eyebrow = getEyebrows(keypoints_eyebrows)
             # create image
-            image = drawKeypoints(image, False, keypoints_mouth, keypoints_eyes, mouth, False)
+            image = drawKeypoints(image, keypoints_eyebrows, keypoints_mouth, keypoints_eyes, mouth, False)
             # analyse
-
+ 
             # collect information for neutral emotion
             if frames_count < CALIBRATION_FRAMES:
                 facepart_analysis.addNeutralMouthRelation(mouth)
-                facepart_analysis.addEyesHeight(left_eye, right_eye)
+                facepart_analysis.addNeutralDistance(mouth)
+                facepart_analysis.addEyesRelation(left_eye, right_eye)#
+                facepart_analysis.addNeutralBrowDistance(keypoints_eyebrows, keypoints_eyes)
                 calibrationText(image)
             # set neutral emotion
             if frames_count == CALIBRATION_FRAMES:
                 facepart_analysis.setNeutralMouthRelation(CALIBRATION_FRAMES)
-                facepart_analysis.setEyesHeight(CALIBRATION_FRAMES)
+                facepart_analysis.setNeutralDistance(CALIBRATION_FRAMES)
+                facepart_analysis.setEyesRelation(CALIBRATION_FRAMES)
+                facepart_analysis.setNeutralBrowDistance(CALIBRATION_FRAMES)
             # check and set facial action codes facs
             if frames_count > CALIBRATION_FRAMES:
                 facepart_analysis.checkLipCornerPuller(mouth)
                 facepart_analysis.checkEyesSlit(left_eye, right_eye)
+                facepart_analysis.checkLipCornerDepressor(mouth)
+                facepart_analysis.checkBrowLowerer(keypoints_eyebrows, keypoints_eyes)
 
                 facepart_analysis.setEmotion()
 
 
             # show data
-            textImage(image, facepart_analysis.emotion, facepart_analysis.lip_corner_puller, facepart_analysis.eyes_slit)
+            textImage(image, facepart_analysis.emotion, facepart_analysis.lip_corner_puller, facepart_analysis.eyes_slit, facepart_analysis.lip_corner_depressor, facepart_analysis.brow_lowerer)
             showImage(image)
 
             frames_count += 1

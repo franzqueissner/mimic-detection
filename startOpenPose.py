@@ -14,7 +14,8 @@ def start_openpose(run_number):
     run = "run" + str(run_number)
     os.chdir("openpose-1.7.0-binaries-win64-gpu-python3.7-flir-3d_recommended\openpose")
     print(f'Starting OpenPose and collecting keypoints in run{run_number}')
-    os.system(f"bin\OpenPoseDemo.exe --face --render_pose 0 --display 0 --net_resolution -1x128 --write_json ..\..\keypoints\\{run}")
+    os.system(f"bin\OpenPoseDemo.exe --face --render_pose 0 --display -1 --net_resolution -1x128 --write_json ..\..\keypoints\\{run}")
+    # os.system(f"bin\OpenPoseDemo.exe --face --render_pose 0 --display 0 --net_resolution -1x128 --write_json ..\..\keypoints\\{run}")
     os.chdir("../..")
 
 
